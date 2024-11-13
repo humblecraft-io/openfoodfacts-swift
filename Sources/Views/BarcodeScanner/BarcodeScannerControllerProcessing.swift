@@ -10,7 +10,7 @@ import Vision
 
 extension BarcodeScannerController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
-    func handleDetectedBarcode(request: VNRequest, error: Error?) {
+    public func handleDetectedBarcode(request: VNRequest, error: Error?) {
         if let nsError = error as NSError? {
             print(nsError.localizedDescription)
             return
@@ -30,7 +30,7 @@ extension BarcodeScannerController: AVCaptureVideoDataOutputSampleBufferDelegate
         
     }
     
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         

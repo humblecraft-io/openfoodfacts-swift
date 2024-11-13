@@ -16,7 +16,7 @@ protocol BarcodeScannerDelegate: AnyObject {
     func stoppedCapturing()
 }
 
-class BarcodeScannerController: UIViewController {
+public class BarcodeScannerController: UIViewController {
 
     var delegate: BarcodeScannerDelegate?
     
@@ -33,14 +33,14 @@ class BarcodeScannerController: UIViewController {
     
     internal let sessionQueue = DispatchQueue(label: "captureQueue", qos: .background)
     
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Set up the AVCaptureSession.
         self.checkPermissions()
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.black
         
@@ -55,7 +55,7 @@ class BarcodeScannerController: UIViewController {
         view.addSubview(overlayView)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.overlayView.resetStroke()
