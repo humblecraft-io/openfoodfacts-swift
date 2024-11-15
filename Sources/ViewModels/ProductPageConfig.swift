@@ -5,67 +5,69 @@
 //
 import SwiftUI
 
-enum ProductPageType {
+public enum ProductPageType {
     case view, new
 }
 
-enum ProductPageState: Sendable {
+public enum ProductPageState: Sendable {
     case loading, completed, productDetails, error
 }
 
-final class ProductPageConfig: ObservableObject {
+public final class ProductPageConfig: ObservableObject {
+
+    static public let requiredNutrients = ["energy-kcal", "proteins", "carbohydrates", "fat"]
+    static public let requiredImageFields = [ ImageField.front, ImageField.nutrition ]
+
+    public init() {}
+
+    @Published public var pageState = ProductPageState.loading
     
-    static let requiredNutrients = ["energy-kcal", "proteins", "carbohydrates", "fat"]
-    static let requiredImageFields = [ ImageField.front, ImageField.nutrition ]
-    
-    @Published var pageState = ProductPageState.loading
-    
-    @Published var pageType = ProductPageType.view // TODO: workaround until editing will be implemented
+    @Published public var pageType = ProductPageType.view // TODO: workaround until editing will be implemented
     {
         didSet {
             print("PageType set to \(pageType)")
         }
     }
     
-    @Published var nutrientsMeta: NutrientMetadata?
-    @Published var orderedNutrients: [OrderedNutrient] = []
+    @Published public var nutrientsMeta: NutrientMetadata?
+    @Published public var orderedNutrients: [OrderedNutrient] = []
     
-    @Published var isInitialised: Bool = false
+    @Published public var isInitialised: Bool = false
     
-    @Published var productName = ""
-    @Published var brand = ""
-    @Published var categories: [String] = []
-    @Published var weight = ""
-    @Published var servingSize = ""
-    @Published var selectedNutrients: Set<String> = [] // ids
-    @Published var dataFor = DataFor.hundredG
-    @Published var packageLanguage = OFFConfig.shared.productsLanguage {
+    @Published public var productName = ""
+    @Published public var brand = ""
+    @Published public var categories: [String] = []
+    @Published public var weight = ""
+    @Published public var servingSize = ""
+    @Published public var selectedNutrients: Set<String> = [] // ids
+    @Published public var dataFor = DataFor.hundredG
+    @Published public var packageLanguage = OFFConfig.shared.productsLanguage {
         didSet {
             OFFConfig.shared.productsLanguage = packageLanguage
             print("Package language update to \(OFFConfig.shared.productsLanguage)")
         }
     }
-    @Published var images = Dictionary(uniqueKeysWithValues: ImageField.allCases.map { ($0, UIImage()) })
+    @Published public var images = Dictionary(uniqueKeysWithValues: ImageField.allCases.map { ($0, UIImage()) })
     
     @Published var errorMessage: ErrorAlert?
-    @Published var submittedProduct: Product? = nil
+    @Published public var submittedProduct: Product? = nil
     
-    func binding(for key: ImageField) -> Binding<UIImage> {
+   public func binding(for key: ImageField) -> Binding<UIImage> {
         return Binding<UIImage>(
             get: { self.images[key] ?? UIImage() },
             set: { newValue in self.images[key] = newValue }
         )
     }
     
-    var isViewMode: Bool {
+    public var isViewMode: Bool {
         return pageType == .view
     }
-    var isNewMode: Bool {
+    public var isNewMode: Bool {
         return pageType == .new
     }
     
     @MainActor
-    func fetchData(barcode: String) async {
+   public func fetchData(barcode: String) async {
         
         self.pageState = .loading
         
@@ -94,7 +96,7 @@ final class ProductPageConfig: ObservableObject {
         }
     }
     
-    func determinePageType(response: ProductResponse) async -> ProductPageType {
+   public func determinePageType(response: ProductResponse) async -> ProductPageType {
         if response.hasProduct(), let product = response.product {
             await self.unwrapExistingProduct(product: product)
             return ProductPageType.view
@@ -103,7 +105,7 @@ final class ProductPageConfig: ObservableObject {
     }
     
     /// Bare minimum marked with .required() view modifier
-    func getMissingFields() -> [String] {
+   public func getMissingFields() -> [String] {
         
         if !OFFConfig.shared.useRequired { return [] }
         
@@ -117,12 +119,12 @@ final class ProductPageConfig: ObservableObject {
         return missingFields
     }
     
-    func getMissingFieldsMessage() -> String {
+   public func getMissingFieldsMessage() -> String {
         return getMissingFields().map { "'\($0)'" }.joined(separator: ", ")
     }
     
     @MainActor
-    func unwrapExistingProduct(product: Product) async {
+   public func unwrapExistingProduct(product: Product) async {
         
         self.productName = product.productName ?? product.productNameEn ?? ""
         self.brand = product.brands ?? ""
@@ -175,7 +177,7 @@ final class ProductPageConfig: ObservableObject {
         }
     }
     
-    func uploadAllProductData(barcode: String) async {
+   public func uploadAllProductData(barcode: String) async {
         
         await MainActor.run {
             self.pageState = .loading

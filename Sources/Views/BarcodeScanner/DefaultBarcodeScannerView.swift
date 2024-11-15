@@ -43,8 +43,8 @@ public struct DefaultBarcodeScannerView: View {
                 if newValue.isEmpty { return }
                 print("Found barcode \(barcode) which \(barcode.isAValidBarcode() ? "Valid" : "Invalid")")
                 if newValue.isAValidBarcode() {
-                    resetState()
                     completion(barcode)
+                    resetState()
                 } else {
                     isInvalidCode = true
                 }

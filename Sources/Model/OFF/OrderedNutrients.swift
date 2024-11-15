@@ -34,8 +34,8 @@ public class OrderedNutrient: ObservableObject, Codable, Equatable, Identifiable
     let subNutrients: [OrderedNutrient]?
     
     // user entered
-    @Published var value: String = ""
-    @Published var currentUnit: Unit = .g
+    @Published public var value: String = ""
+    @Published public var currentUnit: Unit = .g
     
     public static func == (lhs: OrderedNutrient, rhs: OrderedNutrient) -> Bool {
         return lhs.id == rhs.id  // or whatever properties you think define equality
