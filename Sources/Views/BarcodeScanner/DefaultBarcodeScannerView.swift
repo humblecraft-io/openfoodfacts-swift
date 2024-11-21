@@ -10,41 +10,29 @@ import SwiftUI
 public struct DefaultBarcodeScannerView: View {
 
     @State private var barcode: String = ""
-    @State private var isEditing = false
     @State private var isInvalidCode = false
-    @State private var isScanning = true
 
+    let isScanning: Bool
     let completion: (String) -> Void
 
-    public init(completion: @escaping (String) -> Void) {
+    public init(isScanning: Bool, completion: @escaping (String) -> Void) {
+        self.isScanning = isScanning
         self.completion = completion
     }
 
     private func resetState() {
         isInvalidCode = false
         barcode = ""
-        isScanning = true
     }
 
     public var body: some View {
-        BarcodeScannerScreen(barcode: $barcode, isCapturing: $isScanning).ignoresSafeArea(.all)
-//            .navigationDestination(isPresented: $isEditing, destination: {
-//                ProductPage(barcode: barcode) { uploadedProduct in
-//                    print(uploadedProduct?.json() ?? "returned product is nil")
-//                    resetState()
-//                }
-//            })
-//            .onChange(of: isEditing) { newValue in
-//                if newValue == false {
-//                    resetState()
-//                }
-//            }
+        BarcodeScannerScreen(barcode: $barcode, isCapturing: .constant(isScanning))
+            .ignoresSafeArea(.all)
             .onChange(of: barcode) { newValue in
                 if newValue.isEmpty { return }
                 print("Found barcode \(barcode) which \(barcode.isAValidBarcode() ? "Valid" : "Invalid")")
                 if newValue.isAValidBarcode() {
                     completion(barcode)
-                    resetState()
                 } else {
                     isInvalidCode = true
                 }
@@ -62,5 +50,5 @@ public struct DefaultBarcodeScannerView: View {
 // MARK: - Preview
 
 #Preview {
-    DefaultBarcodeScannerView(completion: { _ in })
+    DefaultBarcodeScannerView(isScanning: true, completion: { _ in })
 }

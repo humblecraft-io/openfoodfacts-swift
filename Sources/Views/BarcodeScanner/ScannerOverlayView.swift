@@ -110,7 +110,7 @@ class ScannerOverlayView: UIView, CAAnimationDelegate {
             colorAnimation.duration = 0.5
             
             let widthAnimation = CABasicAnimation(keyPath: "lineWidth")
-            widthAnimation.toValue = strokeLayer.lineWidth * 3
+            widthAnimation.toValue = strokeLayer.lineWidth * 1.5
             widthAnimation.duration = 0.5
             
             let animationGroup = CAAnimationGroup()
@@ -121,7 +121,7 @@ class ScannerOverlayView: UIView, CAAnimationDelegate {
             strokeLayer.add(animationGroup, forKey: animationGroupKey)
             
             strokeLayer.strokeColor = finalColor
-            strokeLayer.lineWidth = strokeLayer.lineWidth * 3
+            strokeLayer.lineWidth = strokeLayer.lineWidth * 1.5
         } else {
             print("\(animationGroupKey) animation group is already running!")
         }
