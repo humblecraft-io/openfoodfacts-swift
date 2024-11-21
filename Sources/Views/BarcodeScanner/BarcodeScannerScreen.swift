@@ -46,5 +46,6 @@ public class BarcodeScannerCoordinator: NSObject, BarcodeScannerDelegate {
     
     public func stoppedCapturing() {
         self.isCapturing = false
+        self.barcode = ""
     }
 }
